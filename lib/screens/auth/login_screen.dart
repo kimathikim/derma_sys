@@ -3,6 +3,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:dermasys_flutter/patient_main.dart';
 import 'package:video_player/video_player.dart';
+import 'package:dermasys_flutter/doctor_main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isObscure = true;
   bool _isLoading = false;
+  bool _isPatient = true;
+
 
   LocalAuthentication auth = LocalAuthentication();
   late VideoPlayerController _videoController;
@@ -73,12 +76,14 @@ class _LoginPageState extends State<LoginPage> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MainNavigationPage()),
+          MaterialPageRoute(
+              builder: (context) => _isPatient
+                  ? const MainNavigationPage()
+                  : const DocMainNavigationPage()),
         );
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,6 +121,22 @@ class _LoginPageState extends State<LoginPage> {
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Patient'),
+                          Switch(
+                            value: _isPatient,
+                            onChanged: (value) {
+                              setState(() {
+                                _isPatient = value;
+                              });
+                            },
+                          ),
+                          const Text('Doctor'),
+                        ],
                       ),
                       const SizedBox(height: 30),
                       // Login Form
