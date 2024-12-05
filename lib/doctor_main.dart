@@ -9,6 +9,7 @@ import 'package:dermasys_flutter/screens/treatment/treatment_overview.dart';
 import 'package:dermasys_flutter/screens/inventory/inventory_management.dart';
 import 'package:dermasys_flutter/screens/analytics/analytics_overview.dart';
 import 'package:dermasys_flutter/screens/communication/messages.dart';
+import 'package:dermasys_flutter/screens/patient/patient_search.dart';
 
 class DocMainNavigationPage extends StatefulWidget {
   const DocMainNavigationPage({super.key});
@@ -24,7 +25,7 @@ class _MainNavigationPageState extends State<DocMainNavigationPage> {
   final List<Widget> _pages = [
     const DoctorDashboard(), // Dashboard Page
     const DoctorAppointmentPage(), // Appointments Page
-    const PatientRegistrationPage(), // Patient Management Page
+    const PatientSearchPage(), // Patient
     const TriageOverviewPage(), // Triage Page
     const TreatmentOverviewPage(), // Treatment Page
     const InventoryManagementPage(), // Inventory Management Page

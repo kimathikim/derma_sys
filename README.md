@@ -28,6 +28,8 @@ samples, guidance on mobile development, and a full API reference.
 3. **Navigate to the project directory:** `cd dermasys-flutter`
 4. **Run the app:** `flutter run`
 
+4. if you want to switch between patient and doctor, you can just toggle the switch on the login screen.
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
@@ -35,5 +37,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
 

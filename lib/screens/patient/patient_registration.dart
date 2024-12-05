@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'package:dermasys_flutter/database_helper.dart'; // Import the DatabaseHelper
+import 'package:dermasys_flutter/screens/triage/triage.dart'; // Import the TriagePage
 class PatientRegistrationPage extends StatefulWidget {
   const PatientRegistrationPage({Key? key}) : super(key: key);
 
   @override
-  _PatientRegistrationPageState createState() => _PatientRegistrationPageState();
+  _PatientRegistrationPageState createState() =>
+      _PatientRegistrationPageState();
 }
 
 class _PatientRegistrationPageState extends State<PatientRegistrationPage> {
@@ -17,7 +19,8 @@ class _PatientRegistrationPageState extends State<PatientRegistrationPage> {
   final TextEditingController _middleNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _nextOfKinController = TextEditingController();
-  final TextEditingController _nextOfKinPhoneController = TextEditingController();
+  final TextEditingController _nextOfKinPhoneController =
+      TextEditingController();
 
   String? _selectedGender;
   String? _selectedRelationship;
@@ -25,7 +28,7 @@ class _PatientRegistrationPageState extends State<PatientRegistrationPage> {
   String? _selectedInsurance;
 
   // Gender options
-  final List<String> _genders = ["Male", "Female", "Other"];
+  final List<String> _genders = ["male", "female", "other"];
 
   // Relationship options
   final List<String> _relationships = ["Parent", "Sibling", "Spouse", "Other"];
@@ -151,7 +154,8 @@ class _PatientRegistrationPageState extends State<PatientRegistrationPage> {
   }
 
   // Dropdown field builder
-  Widget _buildDropdownField(String label, List<String> options, String? selectedValue, ValueChanged<String?> onChanged) {
+  Widget _buildDropdownField(String label, List<String> options,
+      String? selectedValue, ValueChanged<String?> onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -206,7 +210,8 @@ class _PatientRegistrationPageState extends State<PatientRegistrationPage> {
         ),
         child: Text(
           _selectedDate ?? "Select Date",
-          style: TextStyle(color: _selectedDate == null ? Colors.grey : Colors.black),
+          style: TextStyle(
+              color: _selectedDate == null ? Colors.grey : Colors.black),
         ),
       ),
     );
@@ -233,14 +238,41 @@ class _PatientRegistrationPageState extends State<PatientRegistrationPage> {
     });
   }
 
-  // Submit form with validation
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
-      // Save the patient data or proceed with form submission
+      // Save the patient data to the database
+      final patient = {
+        'idno': _idController.text,
+        'name': _firstNameController.text,
+        'surname': _surnameController.text,
+        'middle_name': _middleNameController.text,
+        'gender': _selectedGender,
+        'date_of_birth': _selectedDate,
+        'phone': _phoneNumberController.text,
+        'next_of_kin': _nextOfKinController.text,
+        'next_of_kin_phone': _nextOfKinPhoneController.text,
+        'relationship': _selectedRelationship,
+        'password': '1234567',
+        'patient_type': _selectedPatientType,
+        'insurance': _selectedInsurance,
+      };
+
+      await DatabaseHelper.instance.savePatient(patient);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Patient data saved successfully!")),
       );
+
+      // Navigate to TriagePage
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TriagePage(patientId: patient['idno'] as String),
+                  
+        ),
+      );
+
+      _resetForm();
     }
   }
 }
-

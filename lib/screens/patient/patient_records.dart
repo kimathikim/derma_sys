@@ -8,9 +8,10 @@ class PatientRecordsPage extends StatefulWidget {
 }
 
 class _PatientRecordsPageState extends State<PatientRecordsPage> {
-  // Sample list of medical records
+  final TextEditingController _searchController = TextEditingController();
   final List<Map<String, dynamic>> _records = [
     {
+      "id": "1",
       "date": "2024-01-10",
       "title": "Acne Treatment Plan",
       "description": "Started a topical therapy for moderate acne.",
@@ -18,6 +19,7 @@ class _PatientRecordsPageState extends State<PatientRecordsPage> {
       "status": "Ongoing",
     },
     {
+      "id": "2",
       "date": "2024-01-20",
       "title": "Blood Test Results",
       "description": "Complete blood count showed no abnormalities.",
@@ -25,6 +27,7 @@ class _PatientRecordsPageState extends State<PatientRecordsPage> {
       "status": "Completed",
     },
     {
+      "id": "3",
       "date": "2024-02-05",
       "title": "Eczema Flare-up Consultation",
       "description": "Prescribed hydrocortisone cream to manage symptoms.",
@@ -32,6 +35,25 @@ class _PatientRecordsPageState extends State<PatientRecordsPage> {
       "status": "Completed",
     },
   ];
+
+  void _searchPatient() {
+    final patientId = _searchController.text;
+    final patient = _records.firstWhere(
+      (record) => record["id"] == patientId,
+    );
+
+    if (patient != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TriagePage(patient: patient)),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RegistrationPage()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +72,17 @@ class _PatientRecordsPageState extends State<PatientRecordsPage> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: "Enter Patient ID",
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: _searchPatient,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             Expanded(child: _buildRecordsGrid()),
           ],
         ),
@@ -57,12 +90,11 @@ class _PatientRecordsPageState extends State<PatientRecordsPage> {
     );
   }
 
-  // Builds a grid layout for displaying medical records
   Widget _buildRecordsGrid() {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Display two records per row
-        childAspectRatio: 3, // Adjust height for large screens
+        crossAxisCount: 2,
+        childAspectRatio: 3,
         mainAxisSpacing: 20,
         crossAxisSpacing: 20,
       ),
@@ -122,3 +154,34 @@ class _PatientRecordsPageState extends State<PatientRecordsPage> {
   }
 }
 
+class TriagePage extends StatelessWidget {
+  final Map<String, dynamic> patient;
+
+  const TriagePage({required this.patient});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Triage Page"),
+      ),
+      body: Center(
+        child: Text("Welcome to the Triage Page for ${patient["title"]}"),
+      ),
+    );
+  }
+}
+
+class RegistrationPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Registration Page"),
+      ),
+      body: Center(
+        child: const Text("Please register the patient."),
+      ),
+    );
+  }
+}

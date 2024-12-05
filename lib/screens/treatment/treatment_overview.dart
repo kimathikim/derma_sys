@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:dermasys_flutter/screens/treatment/treatment.dart';
+import 'package:dermasys_flutter/database_helper.dart';
 
 class TreatmentOverviewPage extends StatefulWidget {
   const TreatmentOverviewPage({Key? key}) : super(key: key);
@@ -8,35 +10,27 @@ class TreatmentOverviewPage extends StatefulWidget {
 }
 
 class _TreatmentOverviewPageState extends State<TreatmentOverviewPage> {
-  // Sample list of patients currently undergoing treatment
-  final List<Map<String, dynamic>> _treatmentPatients = [
-    {
-      "name": "Jane Doe",
-      "treatmentType": "Acne Treatment",
-      "medication": "Benzoyl Peroxide",
-      "progress": 70,
-      "status": "In Progress",
-    },
-    {
-      "name": "John Smith",
-      "treatmentType": "Eczema Care",
-      "medication": "Hydrocortisone",
-      "progress": 50,
-      "status": "In Progress",
-    },
-    {
-      "name": "Alice Johnson",
-      "treatmentType": "Scar Removal",
-      "medication": "Retinoid Cream",
-      "progress": 30,
-      "status": "Pending",
-    },
+  List<Map<String, dynamic>> _treatmentPatients = [];
+  String _selectedStatusFilter = "All";
+  final List<String> _statusOptions = [
+    "All",
+    "In Progress",
+    "Completed",
+    "Pending"
   ];
 
-  String _selectedStatusFilter = "All";
+  @override
+  void initState() {
+    super.initState();
+    _fetchTreatmentPatients();
+  }
 
-  // Status filter options
-  final List<String> _statusOptions = ["All", "In Progress", "Completed", "Pending"];
+  Future<void> _fetchTreatmentPatients() async {
+    final patients = await DatabaseHelper.instance.getAllTreatments();
+    setState(() {
+      _treatmentPatients = patients;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,24 +94,27 @@ class _TreatmentOverviewPageState extends State<TreatmentOverviewPage> {
       itemBuilder: (context, index) {
         final patient = filteredPatients[index];
         return Card(
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          child: ListTile(
-            leading: _buildProgressIndicator(patient["progress"]),
-            title: Text(patient["name"]),
-            subtitle: Text(
-              "Treatment: ${patient["treatmentType"]}\nMedication: ${patient["medication"]}\nStatus: ${patient["status"]}",
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                // Navigate to treatment details
-              },
-            ),
-            onTap: () {
-              // Navigate to treatment details
-            },
-          ),
-        );
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            child: ListTile(
+              leading: _buildProgressIndicator(patient["progress"]),
+              title: Text(patient["name"]),
+              subtitle: Text(
+                "Treatment: ${patient["treatmentType"]}\nMedication: ${patient["medication"]}\nStatus: ${patient["status"]}",
+              ),
+              trailing: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios),
+                onPressed: () {
+                  // Navigate to RecordTreatmentPage
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          RecordTreatmentPage(patientId: patient["id"]),
+                    ),
+                  );
+                },
+              ),
+            ));
       },
     );
   }
@@ -146,4 +143,3 @@ class _TreatmentOverviewPageState extends State<TreatmentOverviewPage> {
     );
   }
 }
-

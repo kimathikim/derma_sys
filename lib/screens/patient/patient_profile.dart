@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http; // For backend integration
 import 'dart:convert'; // For encoding JSON
 import 'dart:io';
+import 'package:dermasys_flutter/screens/auth/login_screen.dart';
 
 class PatientProfilePage extends StatefulWidget {
   const PatientProfilePage({super.key});
@@ -19,22 +20,19 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   XFile? _profileImage;
 
-  // Simulate the patient's existing data
   @override
   void initState() {
     super.initState();
     _nameController.text = 'Jane Doe';
     _emailController.text = 'janedoe@example.com';
-    _phoneController.text = '123-456-7890';
-    _addressController.text = '123 Main St, Springfield, USA';
+    _phoneController.text = '124-456-7890';
+    _addressController.text = '124 Main St, Springfield, USA';
   }
 
-  // Image picker for uploading profile picture
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -45,7 +43,6 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
     }
   }
 
-  // Validate email format
   String? _validateEmail(String? value) {
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (value == null || value.isEmpty) {
@@ -56,18 +53,16 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
     return null;
   }
 
-  // Validate phone number format (simple example)
   String? _validatePhone(String? value) {
-    final phoneRegex = RegExp(r'^\d{10}$');
+    final phoneRegex = RegExp(r'^\d{11}$');
     if (value == null || value.isEmpty) {
       return 'Please enter your phone number';
     } else if (!phoneRegex.hasMatch(value)) {
-      return 'Please enter a valid 10-digit phone number';
+      return 'Please enter a valid 11-digit phone number';
     }
     return null;
   }
 
-  // Backend integration for saving profile
   Future<void> _saveProfile() async {
     final url = Uri.parse('https://your-backend-api.com/profile/update');
     try {
@@ -81,11 +76,10 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
           'email': _emailController.text,
           'phone': _phoneController.text,
           'address': _addressController.text,
-          // Add more fields as needed
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Profile updated successfully!')),
         );
@@ -99,7 +93,6 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
     }
   }
 
-  // Backend integration for changing password
   Future<void> _changePassword() async {
     final url = Uri.parse('https://your-backend-api.com/password/change');
     try {
@@ -113,7 +106,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Password changed successfully!')),
         );
@@ -126,6 +119,14 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
       );
     }
   }
+void _logout() {
+  // Clear user session data
+  // Navigate to login screen
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => const LoginPage()),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -136,23 +137,21 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
         actions: [
           IconButton(
             icon: const FaIcon(FontAwesomeIcons.signOutAlt),
-            onPressed: () {
-              // Implement logout functionality
-            },
+            onPressed: _logout,
             tooltip: 'Logout',
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(17.0),
         child: Column(
           children: [
             _buildProfilePicture(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 21),
             _buildProfileForm(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 21),
             _buildSaveButton(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 11),
             _buildChangePasswordSection(),
           ],
         ),
@@ -160,17 +159,16 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
     );
   }
 
-  // Profile picture section
   Widget _buildProfilePicture() {
     return Column(
       children: [
         CircleAvatar(
-          radius: 60,
+          radius: 61,
           backgroundImage: _profileImage != null
               ? FileImage(File(_profileImage!.path)) as ImageProvider
               : const AssetImage('assets/default_avatar.png'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 11),
         TextButton.icon(
           onPressed: _pickImage,
           icon: const Icon(Icons.camera_alt),
@@ -180,27 +178,25 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
     );
   }
 
-  // Form to edit profile details
   Widget _buildProfileForm() {
     return Form(
       key: _formKey,
       child: Column(
         children: [
           _buildTextField(_nameController, 'Name', Icons.person),
-          const SizedBox(height: 10),
+          const SizedBox(height: 11),
           _buildTextField(_emailController, 'Email', Icons.email,
               TextInputType.emailAddress, _validateEmail),
-          const SizedBox(height: 10),
+          const SizedBox(height: 11),
           _buildTextField(_phoneController, 'Phone Number', Icons.phone,
               TextInputType.phone, _validatePhone),
-          const SizedBox(height: 10),
+          const SizedBox(height: 11),
           _buildTextField(_addressController, 'Address', Icons.home),
         ],
       ),
     );
   }
 
-  // Generic text field widget for the profile form
   Widget _buildTextField(
       TextEditingController controller, String label, IconData icon,
       [TextInputType inputType = TextInputType.text,
@@ -211,7 +207,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
       ),
       validator: validator ??
           (value) {
@@ -223,7 +219,6 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
     );
   }
 
-  // Save button to submit profile changes
   Widget _buildSaveButton() {
     return ElevatedButton.icon(
       onPressed: () {
@@ -234,26 +229,25 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
       icon: const Icon(Icons.save),
       label: const Text('Save Changes'),
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        padding: const EdgeInsets.symmetric(horizontal: 51, vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       ),
     );
   }
 
-  // Change password section with validation
   Widget _buildChangePasswordSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'Change Password',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 11),
         _buildPasswordField(_passwordController, 'New Password'),
-        const SizedBox(height: 10),
+        const SizedBox(height: 11),
         _buildPasswordField(_confirmPasswordController, 'Confirm New Password'),
-        const SizedBox(height: 10),
+        const SizedBox(height: 11),
         ElevatedButton.icon(
           onPressed: () {
             if (_passwordController.text != _confirmPasswordController.text) {
@@ -273,16 +267,14 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
           icon: const Icon(Icons.lock),
           label: const Text('Change Password'),
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            padding: const EdgeInsets.symmetric(horizontal: 51, vertical: 15),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
           ),
         ),
       ],
     );
   }
 
-  // Password field for changing passwords
   Widget _buildPasswordField(TextEditingController controller, String label) {
     return TextFormField(
       controller: controller,
@@ -290,7 +282,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: const Icon(Icons.lock),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
       ),
     );
   }

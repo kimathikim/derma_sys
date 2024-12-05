@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:dermasys_flutter/database_helper.dart';
+import 'package:dermasys_flutter/screens/treatment/treatment.dart';
+import 'package:dermasys_flutter/database_helper.dart';
 
 class TriageOverviewPage extends StatefulWidget {
   const TriageOverviewPage({Key? key}) : super(key: key);
@@ -8,31 +11,23 @@ class TriageOverviewPage extends StatefulWidget {
 }
 
 class _TriageOverviewPageState extends State<TriageOverviewPage> {
-  // Sample list of patients for the triage area
-  final List<Map<String, dynamic>> _triagePatients = [
-    {
-      "name": "Jane Doe",
-      "status": "Walk-In",
-      "arrivalTime": "10:30 AM",
-      "priority": "High"
-    },
-    {
-      "name": "John Smith",
-      "status": "Observation",
-      "arrivalTime": "11:00 AM",
-      "priority": "Medium"
-    },
-    {
-      "name": "Alice Johnson",
-      "status": "Procedure Queue",
-      "arrivalTime": "11:15 AM",
-      "priority": "Low"
-    },
-  ];
-
+  List<Map<String, dynamic>> _triagePatients = [];
   String _selectedStatusFilter = "All";
-
   final List<String> _statusOptions = ["All", "Walk-In", "Observation", "Procedure Queue"];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTriagePatients();
+  }
+
+  Future<void> _fetchTriagePatients() async {
+    final patients = await DatabaseHelper.instance.getAllPatients();
+    print(patients);
+    setState(() {
+      _triagePatients = patients;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +82,7 @@ class _TriageOverviewPageState extends State<TriageOverviewPage> {
     // Filter patients based on selected status
     List<Map<String, dynamic>> filteredPatients = _selectedStatusFilter == "All"
         ? _triagePatients
-        : _triagePatients
-            .where((patient) => patient["status"] == _selectedStatusFilter)
-            .toList();
+        : _triagePatients.where((patient) => patient["status"] == _selectedStatusFilter).toList();
 
     return ListView.builder(
       itemCount: filteredPatients.length,
@@ -104,16 +97,28 @@ class _TriageOverviewPageState extends State<TriageOverviewPage> {
             ),
             title: Text(patient["name"]),
             subtitle: Text(
-              "Status: ${patient["status"]}\nArrival Time: ${patient["arrivalTime"]}",
+              "Status: ${patient["status"]}\nArrival Time: ${patient["arrival_time"]}",
             ),
             trailing: IconButton(
               icon: const Icon(Icons.arrow_forward_ios),
               onPressed: () {
-                // Navigate to patient details or triage actions
+                // Navigate to RecordTreatmentPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecordTreatmentPage(patientId: patient["id"]),
+                  ),
+                );
               },
             ),
             onTap: () {
-              // Navigate to patient details or triage actions
+              // Navigate to RecordTreatmentPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecordTreatmentPage(patientId: patient["id"]),
+                ),
+              );
             },
           ),
         );
@@ -135,4 +140,3 @@ class _TriageOverviewPageState extends State<TriageOverviewPage> {
     }
   }
 }
-

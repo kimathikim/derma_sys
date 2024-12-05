@@ -18,33 +18,62 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
 
   String? _gender;
   DateTime? _dateOfBirth;
+  bool _isLoading = false; // Define the _isLoading variable
 
   // Method to handle doctor registration
   Future<void> _registerDoctor() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
       final dbHelper = DatabaseHelper.instance;
 
-      Map<String, dynamic> newDoctor = {
-        'name': _nameController.text,
-        'email': _emailController.text,
-        'phone': _phoneController.text,
-        'date_of_birth': _dateOfBirth?.toIso8601String(),
-        'user_type': 'doctor',
-        'specialization': _specializationController.text,
-        'gender': _gender,
-        'password': _passwordController.text,
-      };
-      print(newDoctor);
-
+      // Check if email already exists
       try {
+        final existingUser = await dbHelper.getUserByEmailAndPassword(
+          _emailController.text,
+          '', // Empty password for email check only
+        );
+
+        if (existingUser != null) {
+          setState(() {
+            _isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Email already registered')),
+          );
+          return;
+        }
+
+        Map<String, dynamic> newDoctor = {
+          'name': _nameController.text,
+          'email': _emailController.text,
+          'phone': _phoneController.text,
+          'date_of_birth': _dateOfBirth?.toIso8601String(),
+          'user_type': 'doctor',
+          'specialization': _specializationController.text,
+          'gender': _gender,
+          'password': _passwordController.text, // Consider hashing password
+        };
+
         await dbHelper.addUser(newDoctor);
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Doctor registered successfully!')),
         );
-        Navigator.pop(context); // Navigate back after signup
+        Navigator.pop(context);
       } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error: Doctor registration failed')),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -116,7 +145,8 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: _specializationController,
-                  decoration: const InputDecoration(labelText: "Specialization"),
+                  decoration:
+                      const InputDecoration(labelText: "Specialization"),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your specialization';
@@ -190,4 +220,3 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
     );
   }
 }
-
