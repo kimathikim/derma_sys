@@ -430,4 +430,9 @@ class DatabaseHelper {
     final db = await instance.database;
     db.close();
   }
+Future<String> getDatabasePath() async {
+  final dbPath = await getDatabasesPath();
+  final path = join(dbPath, 'dermasys.db');
+  return path;
+}
 }

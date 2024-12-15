@@ -12,9 +12,11 @@ void main() async {
   sqfliteFfiInit();  // Initialize the FFI system
   databaseFactory = databaseFactoryFfi; // Set the database factory to FFI-based implementation
 
-//  await deleteDatabaseFile();
+  // await deleteDatabaseFile();
 
   await initializeDatabase();
+
+  await printDatabasePath(); // Print the database path
 
   runApp(const MyApp()); // Launch the app
 }
@@ -30,6 +32,11 @@ Future<void> deleteDatabaseFile() async {
 Future<void> initializeDatabase() async {
   final dbHelper = DatabaseHelper.instance;
   await dbHelper.database; 
+}
+
+Future<void> printDatabasePath() async {
+  final path = await DatabaseHelper.instance.getDatabasePath();
+  print('Database path: $path');
 }
 
 class MyApp extends StatelessWidget {
