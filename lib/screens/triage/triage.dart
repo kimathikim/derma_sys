@@ -5,7 +5,7 @@ import 'package:dermasys_flutter/doctor_main.dart';
 class TriagePage extends StatefulWidget {
   final String patientId;
 
-  const TriagePage({Key? key, required this.patientId}) : super(key: key);
+  const TriagePage({super.key, required this.patientId});
 
   @override
   _TriagePageState createState() => _TriagePageState();
@@ -217,7 +217,7 @@ class _TriagePageState extends State<TriagePage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => DocMainNavigationPage()),
+        MaterialPageRoute(builder: (context) => const DocMainNavigationPage()),
       );
       // Optionally navigate to another page or reset the form
       _resetForm();

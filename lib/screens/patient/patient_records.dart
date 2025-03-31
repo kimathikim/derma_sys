@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PatientRecordsPage extends StatefulWidget {
-  const PatientRecordsPage({Key? key}) : super(key: key);
+  const PatientRecordsPage({super.key});
 
   @override
   _PatientRecordsPageState createState() => _PatientRecordsPageState();
@@ -42,18 +42,11 @@ class _PatientRecordsPageState extends State<PatientRecordsPage> {
       (record) => record["id"] == patientId,
     );
 
-    if (patient != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => TriagePage(patient: patient)),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => RegistrationPage()),
-      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TriagePage(patient: patient)),
+    );
     }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +150,7 @@ class _PatientRecordsPageState extends State<PatientRecordsPage> {
 class TriagePage extends StatelessWidget {
   final Map<String, dynamic> patient;
 
-  const TriagePage({required this.patient});
+  const TriagePage({super.key, required this.patient});
 
   @override
   Widget build(BuildContext context) {
@@ -173,14 +166,16 @@ class TriagePage extends StatelessWidget {
 }
 
 class RegistrationPage extends StatelessWidget {
+  const RegistrationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Registration Page"),
       ),
-      body: Center(
-        child: const Text("Please register the patient."),
+      body: const Center(
+        child: Text("Please register the patient."),
       ),
     );
   }

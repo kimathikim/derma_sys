@@ -8,7 +8,7 @@ import 'package:dermasys_flutter/screens/patient/patient_records.dart';
 import 'package:dermasys_flutter/screens/communication/messages.dart';
 
 class MainNavigationPage extends StatefulWidget {
-  const MainNavigationPage({Key? key}) : super(key: key);
+  const MainNavigationPage({super.key});
 
   @override
   _MainNavigationPageState createState() => _MainNavigationPageState();

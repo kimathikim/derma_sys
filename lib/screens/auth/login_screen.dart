@@ -6,7 +6,6 @@ import 'package:dermasys_flutter/patient_main.dart';
 import 'package:dermasys_flutter/doctor_main.dart';
 import 'package:video_player/video_player.dart';
 import 'package:dermasys_flutter/utils/sessionmanager.dart';
-import 'package:dermasys_flutter/screens/auth/signup_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -248,17 +247,26 @@ class _LoginPageState extends State<LoginPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text("Don't have an account? "),
-                                TextButton(
-                                  onPressed: () {
-                                    // Navigate to signup page
-                                    Navigator.pushNamed(context, '/signup');
-                                  },
-                                  child: Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold,
+                                Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Row(
+                                      children: [
+                                        const Text("Don't have an account? "),
+                                        TextButton(
+                                          onPressed: () {
+                                            // Navigate to signup page
+                                            Navigator.pushNamed(context, '/signup');
+                                          },
+                                          child: Text(
+                                            'Sign Up',
+                                            style: TextStyle(
+                                              color: Theme.of(context).primaryColor,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 
 class AnalyticsOverviewPage extends StatefulWidget {
   const AnalyticsOverviewPage({super.key});
@@ -101,58 +101,100 @@ class _AnalyticsOverviewPageState extends State<AnalyticsOverviewPage> {
 
   // Line chart for appointment trends
   Widget _buildLineChart(List<ChartData> data) {
-    return charts.LineChart(
-      [
-        charts.Series<ChartData, int>( // Change the type to int
-          id: 'Appointments',
-          domainFn: (ChartData data, _) => data.label,
-          measureFn: (ChartData data, _) => data.value,
-          data: data,
-        )
-      ],
-      animate: true,
-      primaryMeasureAxis: const charts.NumericAxisSpec(
-        renderSpec: charts.GridlineRendererSpec(
-          labelStyle: charts.TextStyleSpec(
-            fontSize: 12,
+    return LineChart(
+      LineChartData(
+        gridData: const FlGridData(show: true),
+        titlesData: FlTitlesData(
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) => Text(value.toInt().toString()),
+            ),
           ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) => Text(value.toInt().toString()),
+            ),
+          ),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
+        lineBarsData: [
+          LineChartBarData(
+            spots: data.map((point) => FlSpot(point.label.toDouble(), point.value.toDouble())).toList(),
+            isCurved: true,
+            color: Colors.blue,
+            barWidth: 3,
+            dotData: const FlDotData(show: true),
+          ),
+        ],
       ),
     );
   }
 
   // Bar chart for treatment success rates
   Widget _buildBarChart(List<ChartData> data) {
-    return charts.BarChart(
-      [
-        charts.Series<ChartData, String>(
-          id: 'Treatment Success Rate',
-          domainFn: (ChartData data, _) => data.label,
-          measureFn: (ChartData data, _) => data.value,
-          data: data,
-        )
-      ],
-      animate: true,
+    return BarChart(
+      BarChartData(
+        alignment: BarChartAlignment.spaceAround,
+        titlesData: FlTitlesData(
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) => Text(
+                data[value.toInt() % data.length].label.toString(),
+                style: const TextStyle(fontSize: 10),
+              ),
+            ),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) => Text(value.toInt().toString()),
+            ),
+          ),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        ),
+        barGroups: List.generate(
+          data.length,
+          (index) => BarChartGroupData(
+            x: index,
+            barRods: [
+              BarChartRodData(
+                toY: data[index].value.toDouble(),
+                color: Colors.green,
+                width: 20,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   // Pie chart for patient satisfaction
   Widget _buildPieChart(List<ChartData> data) {
-    return charts.PieChart(
-      [
-        charts.Series<ChartData, String>(
-          id: 'Patient Satisfaction',
-          domainFn: (ChartData data, _) => data.label,
-          measureFn: (ChartData data, _) => data.value,
-          data: data,
-          labelAccessorFn: (ChartData data, _) => '${data.value}%',
-        )
-      ],
-      animate: true,
-      defaultRenderer: charts.ArcRendererConfig(
-        arcRendererDecorators: [
-          charts.ArcLabelDecorator(),
-        ],
+    return PieChart(
+      PieChartData(
+        sections: List.generate(
+          data.length,
+          (index) => PieChartSectionData(
+            value: data[index].value.toDouble(),
+            title: '${data[index].value}%',
+            color: [Colors.blue, Colors.green, Colors.orange, Colors.purple][index % 4],
+            radius: 50,
+            titleStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        centerSpaceRadius: 40,
+        sectionsSpace: 2,
       ),
     );
   }

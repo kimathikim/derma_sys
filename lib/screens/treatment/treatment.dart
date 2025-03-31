@@ -5,8 +5,7 @@ import 'package:dermasys_flutter/screens/treatment/treatment_overview.dart';
 class RecordTreatmentPage extends StatefulWidget {
   final String patientId;
 
-  const RecordTreatmentPage({Key? key, required this.patientId})
-      : super(key: key);
+  const RecordTreatmentPage({super.key, required this.patientId});
 
   @override
   _RecordTreatmentPageState createState() => _RecordTreatmentPageState();
@@ -145,8 +144,7 @@ class LabWidget extends StatefulWidget {
   final String doctorObservation;
 
   const LabWidget(
-      {Key? key, required this.patientId, required this.doctorObservation})
-      : super(key: key);
+      {super.key, required this.patientId, required this.doctorObservation});
 
   @override
   _LabWidgetState createState() => _LabWidgetState();

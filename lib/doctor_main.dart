@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dermasys_flutter/screens/doctor/doctor_dashboard.dart';
 import 'package:dermasys_flutter/screens/doctor/doctor_appointments.dart';
 import 'package:dermasys_flutter/screens/doctor/doctor_profile.dart';
-import 'package:dermasys_flutter/screens/patient/patient_registration.dart';
 import 'package:dermasys_flutter/screens/triage/triage_overview.dart';
 import 'package:dermasys_flutter/screens/treatment/treatment_overview.dart';
 import 'package:dermasys_flutter/screens/inventory/inventory_management.dart';

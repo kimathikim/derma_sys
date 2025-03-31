@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MessagesPage extends StatefulWidget {
-  const MessagesPage({Key? key}) : super(key: key);
+  const MessagesPage({super.key});
 
   @override
   _MessagesPageState createState() => _MessagesPageState();
@@ -107,7 +107,7 @@ class _MessagesPageState extends State<MessagesPage> {
 class NewMessagePage extends StatelessWidget {
   final TextEditingController _messageController = TextEditingController();
 
-  NewMessagePage({Key? key}) : super(key: key);
+  NewMessagePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +120,8 @@ class NewMessagePage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              decoration: const InputDecoration(
+            const TextField(
+              decoration: InputDecoration(
                 labelText: "To",
                 border: OutlineInputBorder(),
               ),
@@ -155,7 +155,7 @@ class ConversationPage extends StatelessWidget {
   final String contactName;
   final TextEditingController _messageController = TextEditingController();
 
-  ConversationPage({Key? key, required this.contactName}) : super(key: key);
+  ConversationPage({super.key, required this.contactName});
 
   @override
   Widget build(BuildContext context) {

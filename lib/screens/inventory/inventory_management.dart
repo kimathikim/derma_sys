@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class InventoryManagementPage extends StatefulWidget {
-  const InventoryManagementPage({Key? key}) : super(key: key);
+  const InventoryManagementPage({super.key});
 
   @override
   _InventoryManagementPageState createState() => _InventoryManagementPageState();

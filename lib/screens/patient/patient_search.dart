@@ -4,7 +4,7 @@ import 'package:dermasys_flutter/screens/patient/patient_registration.dart';
 import "package:dermasys_flutter/screens/triage/triage.dart";
 
 class PatientSearchPage extends StatefulWidget {
-  const PatientSearchPage({Key? key}) : super(key: key);
+  const PatientSearchPage({super.key});
 
   @override
   _PatientSearchPageState createState() => _PatientSearchPageState();

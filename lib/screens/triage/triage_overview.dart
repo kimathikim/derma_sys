@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dermasys_flutter/database_helper.dart';
 import 'package:dermasys_flutter/screens/treatment/treatment.dart';
-import 'package:dermasys_flutter/database_helper.dart';
 
 class TriageOverviewPage extends StatefulWidget {
-  const TriageOverviewPage({Key? key}) : super(key: key);
+  const TriageOverviewPage({super.key});
 
   @override
   _TriageOverviewPageState createState() => _TriageOverviewPageState();
@@ -92,8 +91,8 @@ class _TriageOverviewPageState extends State<TriageOverviewPage> {
           margin: const EdgeInsets.symmetric(vertical: 5),
           child: ListTile(
             leading: CircleAvatar(
-              child: Text(patient["priority"][0]), // Priority level initial
               backgroundColor: _getPriorityColor(patient["priority"]),
+              child: Text(patient["priority"][0]),
             ),
             title: Text(patient["name"]),
             subtitle: Text(

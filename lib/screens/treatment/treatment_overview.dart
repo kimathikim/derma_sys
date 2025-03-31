@@ -3,7 +3,7 @@ import 'package:dermasys_flutter/screens/treatment/treatment.dart';
 import 'package:dermasys_flutter/database_helper.dart';
 
 class TreatmentOverviewPage extends StatefulWidget {
-  const TreatmentOverviewPage({Key? key}) : super(key: key);
+  const TreatmentOverviewPage({super.key});
 
   @override
   _TreatmentOverviewPageState createState() => _TreatmentOverviewPageState();

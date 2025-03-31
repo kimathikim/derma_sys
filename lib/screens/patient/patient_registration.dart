@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dermasys_flutter/database_helper.dart'; // Import the DatabaseHelper
 import 'package:dermasys_flutter/screens/triage/triage.dart'; // Import the TriagePage
 class PatientRegistrationPage extends StatefulWidget {
-  const PatientRegistrationPage({Key? key}) : super(key: key);
+  const PatientRegistrationPage({super.key});
 
   @override
   _PatientRegistrationPageState createState() =>
